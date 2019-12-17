@@ -4,10 +4,10 @@ import argparse
 from scapy.all import *
 from iot_header import *
 
-iot_pkt_num = 20
-iot_pkt_len = 8
-data_unit_size = 4
-agg_len = iot_pkt_num * iot_pkt_len
+iot_pkt_num = 20 # 20 pkt bundle to one agg pkt
+data_unit_num = 8 # there are 8 data unit in each pkt 
+unit_size = 4 # bytes
+agg_len = iot_pkt_num * data_unit_num
 
 def main(iface):
     pkt = Ether(src="11:22:33:44:55:66")/\
@@ -16,8 +16,8 @@ def main(iface):
             Flag(spec=0xfa, num=iot_pkt_num, len=agg_len)
 
     for _ in range(0, iot_pkt_num):
-        pkt = pkt / Len(len=iot_pkt_len)
-        pkt = pkt / ("".join([chr(x % 256) for x in xrange(data_unit_size*iot_pkt_len)]))
+        pkt = pkt / Len(len=data_unit_num)
+        pkt = pkt / ("".join([chr(x % 256) for x in xrange(unit_size*data_unit_num)]))
 
     pkt.show2()
     pkt_count = 0
