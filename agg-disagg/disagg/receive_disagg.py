@@ -11,7 +11,7 @@ from scapy.all import ShortField, IntField, LongField, BitField, FieldListField,
 from scapy.all import Ether, IP, UDP, TCP, ARP
 from iot_header import *
 
-pkt_count = 0
+total_pkt_count = 0
 start_time = 0
 last_time = 0
 
@@ -20,18 +20,21 @@ def main(iface):
     # display filter
     def filter(pkt):
         if Flag in pkt:
-            global pkt_count
+            global total_pkt_count
             global start_time
             global last_time
 
-            pkt_count += 1
+            total_pkt_count += 1
                         
-            if pkt_count % 10000 == 0:
+            if total_pkt_count % 10000 == 0:
+                logging.info('Packet verification')
+                logging.info('Packet length: {}'.format(len(pkt)))
+                pkt.show2()
                 logging.info('Received {0} bytes in {1:.2f} seconds'.format(
-                    len(pkt)*pkt_count, time.time() - start_time))
+                    len(pkt)*total_pkt_count, time.time() - start_time))
 
             if time.time() - last_time > 1:
-                logging.info('Received {0} iot packets'.format(pkt_count))
+                logging.info('Received {0} iot packets'.format(total_pkt_count))
                 last_time = time.time()
 
             sys.stdout.flush()

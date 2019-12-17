@@ -11,38 +11,39 @@ from scapy.all import ShortField, IntField, LongField, BitField, FieldListField,
 from scapy.all import Ether, IP, UDP, TCP, ARP
 from iot_header import *
 
-pkt_count = 0
-measure_pkt_count = 0
+total_pkt_count = 0
+conti_pkt_count = 0
 start_time = 0
-show_per_n_pkt = 2000
+show_verf_per_conti_n_pkt = 1000
+idle_threshold = 2 # 2 sec
 
 def main(iface):
 
     # display filter
     def filter(pkt):
         if Flag in pkt:
-            global pkt_count
-            global measure_pkt_count
+            global total_pkt_count
+            global conti_pkt_count
             global start_time
-            
+            global show_verf_per_conti_n_pkt
+            global idle_threshold
             # 10 sec idle time
-            if time.time() - start_time > 2:
+            if time.time() - start_time > idle_threshold:
                 start_time = time.time()
-                measure_pkt_count = 0
+                conti_pkt_count = 0
 
-            pkt_count += 1
-            measure_pkt_count += 1
+            total_pkt_count += 1
+            conti_pkt_count += 1
 
             logging.info('Received {0} aggregated packets'.format(
-                pkt_count))
+                total_pkt_count))
 
-            if measure_pkt_count % show_per_n_pkt == 0:
+            if conti_pkt_count % show_verf_per_conti_n_pkt == 0:
                 logging.info('Packet verification')
                 pkt.show2()
                 logging.info('Packet Length: {}'.format(len(pkt)))
                 logging.info('Received {0} bytes in {1:.2f} seconds'.format(
-                    len(pkt)* measure_pkt_count, time.time() - start_time))
-
+                    len(pkt)* conti_pkt_count, time.time() - start_time))
 
             sys.stdout.flush()
 
