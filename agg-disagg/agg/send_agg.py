@@ -25,7 +25,7 @@ def main(iface):
     pkt = pkt / ("".join([chr(x % 256) for x in xrange(data_unit_num*unit_size)]))
     
     s = conf.L2socket(iface=iface)
-    pkt.show2()
+    #pkt.show2()
     pkt_count = 0
     sec_count = 1
     start_time = time.time()
