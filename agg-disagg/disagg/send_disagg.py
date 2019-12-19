@@ -19,7 +19,7 @@ def main(iface):
         pkt = pkt / Len(len=data_unit_num)
         pkt = pkt / ("".join([chr(x % 256) for x in xrange(unit_size*data_unit_num)]))
 
-    pkt.show2()
+    #pkt.show2()
     pkt_count = 0
     sec_count = 1
     start_time = time.time()
@@ -28,10 +28,10 @@ def main(iface):
             sendp(pkt, iface=iface, verbose=False)
             pkt_count += 1
             if(time.time() - start_time > sec_count):
-                logging.info('Sent iot packets: {0}'.format(pkt_count)) 
+                logging.info('Sent aggregated packets: {0}'.format(pkt_count)) 
                 sec_count += 1
         except KeyboardInterrupt:
-            logging.info('Total sent iot packets: {0}'.format(pkt_count))
+            logging.info('Total sent aggregated packets: {0}'.format(pkt_count))
             logging.info('Total spent Time: {0:.2f}s'.format(time.time() - start_time))
             break
 '''
