@@ -4,10 +4,10 @@ import argparse
 from scapy.all import *
 from iot_header import *
 
-iot_pkt_num = 43 # 43 pkt bundle to one agg pkt
-data_unit_num = 8 # there are 8 data unit in each pkt 
+iot_pkt_num = 44 # 43 pkt bundle to one agg pkt
+ave_unit_num = 8 # there are 8 data unit in each pkt 
 unit_size = 4 # bytes
-agg_len = iot_pkt_num * data_unit_num
+agg_len = iot_pkt_num * ave_unit_num
 
 def main(iface, dur_time):
     pkt = Ether(src="11:22:33:44:55:66")/\
@@ -15,9 +15,16 @@ def main(iface, dur_time):
             UDP(sport=1,dport=2)/\
             Flag(spec=0xfa, num=iot_pkt_num, len=agg_len)
 
-    for _ in range(0, iot_pkt_num):
-        pkt = pkt / Len(len=data_unit_num)
-        pkt = pkt / ("".join([chr(x % 256) for x in xrange(unit_size*data_unit_num)]))
+    for i in range(0, iot_pkt_num):
+        if(i % 3 == 0): 
+            pkt = pkt / Len(len=6)
+            pkt = pkt / ("".join([chr(x % 256) for x in xrange(unit_size*6)]))
+        if(i % 3 == 1): 
+            pkt = pkt / Len(len=8)
+            pkt = pkt / ("".join([chr(x % 256) for x in xrange(unit_size*8)]))
+        if(i % 3 == 2): 
+            pkt = pkt / Len(len=10)
+            pkt = pkt / ("".join([chr(x % 256) for x in xrange(unit_size*10)]))
 
     logging.info('The aggregated packet format')
     pkt.show2()
