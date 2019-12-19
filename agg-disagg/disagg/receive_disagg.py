@@ -27,9 +27,9 @@ def main(iface):
             total_pkt_count += 1
                         
             if total_pkt_count % 10000 == 0:
-                logging.info('Packet verification')
-                logging.info('Packet length: {}'.format(len(pkt)))
-                pkt.show2()
+                #logging.info('Packet verification')
+                #logging.info('Packet length: {}'.format(len(pkt)))
+                #pkt.show2()
                 logging.info('Received {0} bytes in {1:.2f} seconds'.format(
                     len(pkt)*total_pkt_count, time.time() - start_time))
 
