@@ -34,7 +34,7 @@ def main(iface):
                     len(pkt)*total_pkt_count, time.time() - start_time))
 
             if time.time() - last_time > 1:
-                logging.info('Received {0} iot packets'.format(total_pkt_count))
+                logging.info('Received iot packets: {0}'.format(total_pkt_count))
                 last_time = time.time()
 
             sys.stdout.flush()

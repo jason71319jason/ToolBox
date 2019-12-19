@@ -12,10 +12,8 @@ from scapy.all import Ether, IP, UDP, TCP, ARP
 from iot_header import *
 
 total_pkt_count = 0
-conti_pkt_count = 0
 start_time = 0
-show_verf_per_conti_n_pkt = 1000
-idle_threshold = 2 # 2 sec
+show_verf_per_n_pkt = 1000
 
 def main(iface):
 
@@ -23,27 +21,17 @@ def main(iface):
     def filter(pkt):
         if Flag in pkt:
             global total_pkt_count
-            global conti_pkt_count
             global start_time
-            global show_verf_per_conti_n_pkt
-            global idle_threshold
-            # 10 sec idle time
-            if time.time() - start_time > idle_threshold:
-                start_time = time.time()
-                conti_pkt_count = 0
-
+            global show_verf_per_n_pkt
             total_pkt_count += 1
-            conti_pkt_count += 1
 
-            logging.info('Received {0} aggregated packets'.format(
+            logging.info('Received aggregated packets: {0}'.format(
                 total_pkt_count))
 
-            if conti_pkt_count % show_verf_per_conti_n_pkt == 0:
+            if total_pkt_count % show_verf_per_n_pkt == 0:
                 logging.info('Packet verification')
                 pkt.show2()
                 logging.info('Packet Length: {}'.format(len(pkt)))
-                logging.info('Received {0} bytes in {1:.2f} seconds'.format(
-                    len(pkt)* conti_pkt_count, time.time() - start_time))
 
             sys.stdout.flush()
 
